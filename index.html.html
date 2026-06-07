@@ -704,13 +704,28 @@
                 music.pause();
                 musicIcon.classList.replace('fa-pause', 'fa-play');
             } else {
-        // --- LUCES AMBIENTALES GLOBALES Y CHISPAS ---
+                music.play();
+                musicIcon.classList.replace('fa-play', 'fa-pause');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // --- CONTADOR ---
+        const weddingDate = new Date("July 18, 2026 19:00:00").getTime();
+        setInterval(function() {
+            const distance = weddingDate - new Date().getTime();
+            if (distance < 0) return;
+            document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+        }, 1000);
+
+        // --- LUCES AMBIENTALES GLOBALES ---
         function createAmbientLights() {
             const container = document.getElementById('ambient-lights-container');
             if(!container) return;
-            
-            // Luces redondas grandes (fondo)
-            for (let i = 0; i < 40; i++) { 
+            for (let i = 0; i < 40; i++) { /* Más luces para fondo oscuro */
                 let light = document.createElement('div');
                 light.className = 'ambient-light';
                 light.style.left = Math.random() * 100 + '%';
@@ -719,21 +734,6 @@
                 const size = 3 + Math.random() * 8;
                 light.style.width = size + 'px'; light.style.height = size + 'px';
                 container.appendChild(light);
-            }
-
-            // Chispas brillantes voladoras (Fireflies)
-            for (let j = 0; j < 35; j++) {
-                let firefly = document.createElement('div');
-                firefly.className = 'firefly';
-                firefly.style.left = Math.random() * 100 + '%';
-                firefly.style.animationDelay = Math.random() * 10 + 's';
-                firefly.style.animationDuration = (5 + Math.random() * 8) + 's';
-                
-                const size = 1.5 + Math.random() * 2.5; // Muy pequeñas y brillantes
-                firefly.style.width = size + 'px'; 
-                firefly.style.height = size + 'px';
-                
-                container.appendChild(firefly);
             }
         }
         createAmbientLights();

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boda de Alexis & Cristhell</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Paleta Original Adaptada a Gala */
+            --rifle-green: #53583E;
+            --dark-brown: #593B1F;
+            --gold: #C5A059;
+            --gold-bright: #D4AF37;
+            --bg-gala: #2A2D24; /* Fondo verde muy oscuro para contraste de luces */
+            --text-light: #F4F3F0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-gala);
+            color: var(--text-light);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .font-classic { font-family: 'Cinzel', serif; }
+        .font-amoresa { font-family: 'Pinyon Script', cursive; } /* Fallback para Amoresa Aged */
+
+        /* --- PANTALLA DE ENTRADA (SOBRE MÁGICO) --- */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--rifle-green);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease-in-out, visibility 1.5s;
+            background-image: 
+                linear-gradient(rgba(42, 45, 36, 0.9), rgba(42, 45, 36, 0.95)),
+                url('https://www.transparenttextures.com/patterns/handmade-paper.png');
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 55%;
+            background-color: #3b402b; /* Verde más profundo */
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transform-origin: top;
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #intro-screen.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .seal-container {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+
+        #intro-screen.open .seal-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .btn-wax-seal {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, var(--gold-bright), #997a15, #66520e);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 
+                0 4px 10px rgba(0,0,0,0.6),
+                inset 0 2px 5px rgba(255,255,255,0.4),
+                inset 0 -2px 5px rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .btn-wax-seal::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+        }
+
+        .wax-seal-text {
+            font-family: 'Cinzel', serif;
+            color: #fdf5e6;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6), -1px -1px 1px rgba(255,255,255,0.2);
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        #main-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 2s ease-in-out;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: var(--bg-gala);
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            padding-bottom: 20px;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* FOTO LIMPIA SIN DEGRADADO OSCURO */
+        .hero-section {
+            position: relative;
+            height: 85vh;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-image: url('https://www.dropbox.com/scl/fi/6vh0fxgxg0dx3ya07zpf3/image0.jpeg?rlkey=0mcur4k4wv3oolmkgrut9gbt4&raw=1');
+            background-size: cover;
+            background-position: center 20%;
+        }
+
+        /* Degradado transparente: Une la foto con el fondo oscuro de forma sutil */
+        .hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 0%, transparent 75%, var(--bg-gala) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        /* --- TARJETAS DE COLORES (NUEVO DISEÑO GALA) --- */
+        .bg-card {
+            margin: -20px 20px 40px 20px;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 5;
+            /* Efecto Relieve 3D para fondos oscuros */
+            box-shadow: 
+                0 15px 35px rgba(0,0,0,0.6),
+                inset 0 2px 0 rgba(255,255,255,0.15);
+        }
+
+        /* Variaciones de color para las tarjetas */
+        .card-green {
+            background-color: var(--rifle-green);
+            border: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .card-brown {
+            background-color: var(--dark-brown);
+            border: 1px solid rgba(212,175,55,0.2);
+        }
+
+        /* Formas de Relieve */
+        .shape-arch {
+            border-top-left-radius: 150px;
+            border-top-right-radius: 150px;
+            padding-top: 60px;
+        }
+        
+        .shape-arch-bottom {
+            border-bottom-left-radius: 150px;
+            border-bottom-right-radius: 150px;
+            padding-bottom: 60px;
+        }
+
+        /* Títulos */
+        .section-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-bright);
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- EFECTOS MÁGICOS Y ANIMACIONES --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-shimmer {
+            background: linear-gradient(90deg, #D4AF37 0%, #FFF 40%, #D4AF37 80%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer { to { background-position: 200% center; } }
+
+        .pulse-glow { animation: pulseGlow 2s infinite alternate ease-in-out; }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); transform: scale(1); }
+            100% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.7); transform: scale(1.02); }
+        }
+
+        .float-subtle { animation: floatSubtle 4s infinite ease-in-out; }
+        @keyframes floatSubtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Luces Ambientales (Ahora se notan muchísimo sobre el fondo oscuro) */
+        .ambient-light {
+            position: absolute;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -20px;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        }
+
+        .burst-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #FFF;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2000;
+            box-shadow: 0 0 15px 3px rgba(212, 175, 55, 0.9), 0 0 5px 1px #FFF;
+            animation: burstAnim 1s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+        @keyframes burstAnim {
+            0% { transform: translate(0, 0) scale(1.5); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        .magic-trail {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #fff 10%, #D4AF37 50%, transparent 80%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            animation: trailFade 1s forwards linear;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+        }
+        @keyframes trailFade {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, -30px) scale(0); opacity: 0; }
+        }
+
+        /* Botones Adaptados a Fondo Oscuro */
+        .btn-elegant {
+            display: inline-block;
+            padding: 12px 35px;
+            border-radius: 30px;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .btn-outline {
+            border: 1px solid var(--gold-bright);
+            color: var(--gold-bright);
+            background: transparent;
+        }
+        .btn-outline:hover {
+            background: var(--gold-bright);
+            color: var(--bg-gala);
+        }
+        .btn-solid {
+            background-color: var(--gold-bright);
+            color: var(--bg-gala);
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+        }
+        .btn-solid:hover {
+            background-color: #b08d4a;
+            color: #FFF;
+            transform: translateY(-2px);
+        }
+
+        /* TIMELINE VERTICAL ORIGINAL */
+        .timeline {
+            position: relative;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            background-color: rgba(212, 175, 55, 0.4);
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--dark-brown); /* Mismo color de la tarjeta */
+            border: 1px solid var(--gold-bright);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gold-bright);
+            z-index: 2;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#D4AF37] selection:text-white relative">
+    
+    <!-- Contenedores Mágicos Globales -->
+    <div id="magic-cursor-container" style="position:fixed; inset:0; z-index:9999; pointer-events:none; overflow:hidden;"></div>
+    <div id="ambient-lights-container" style="position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;"></div>
+
+    <!-- Audio -->
+    <audio id="bg-music" loop>
+        <source src="https://www.dropbox.com/scl/fi/zg1oy2lusk4yrjcvm04d9/Len-Larregui-Brillas-Letra.mp3?rlkey=nk0cvckkhb4cmxm1dva07oxrr&st=suyq956h&raw=1" type="audio/mpeg">
+    </audio>
+
+    <div id="music-btn" onclick="toggleMusic()" style="position:fixed; bottom:20px; right:20px; width:45px; height:45px; background:var(--gold-bright); color:var(--bg-gala); border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; z-index:999; box-shadow:0 2px 10px rgba(0,0,0,0.5); opacity:0; visibility:hidden; transition:opacity 0.5s;">
+        <i class="fas fa-pause"></i>
+    </div>
+
+    <!-- Pantalla Inicial / Sobre Mágico -->
+    <div id="intro-screen">
+        <div class="envelope-flap">
+            <div class="text-center px-6 transform -translate-y-8">
+                <p class="font-classic text-xs tracking-widest text-[#DDDBD7] mb-2 opacity-80" style="letter-spacing: 0.3em;">NUESTRA BODA</p>
+                <h1 class="font-amoresa text-5xl md:text-6xl text-[#D4AF37] text-shimmer" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Alexis & Cristhell</h1>
+            </div>
+        </div>
+        
+        <div class="seal-container">
+            <div id="burst-container" style="position:absolute; top:50%; left:50%; width:0; height:0; z-index:10; overflow:visible;"></div>
+            <button onclick="openInvitation(event)" class="btn-wax-seal pulse-glow" aria-label="Abrir Invitación">
+                <span class="wax-seal-text">A&C</span>
+            </button>
+            <p class="mt-5 font-classic text-[0.65rem] tracking-widest text-[#DDDBD7] uppercase animate-pulse">Toque el sello para abrir</p>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div id="main-content">
+        
+        <section class="hero-section">
+            <div class="hero-gradient"></div>
+            <div class="hero-content">
+                <div class="names-wrapper fade-in pt-8"> <!-- Agregado un pequeño padding top -->
+                    <!-- Versículo posicionado arriba en el cielo -->
+                    <p class="font-sans text-[0.65rem] md:text-xs tracking-widest mb-4 text-[#FFF] uppercase mx-auto max-w-[85%]" style="letter-spacing: 0.15em; text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.5); line-height: 1.5;">
+                        "Pero, sobre todas estas cosas, vístanse de amor, porque es el vínculo perfecto de unión."<br>
+                        <span class="font-semibold text-[0.6rem] md:text-[0.7rem] text-[#D4AF37] mt-2 block text-shimmer" style="text-shadow: 1px 1px 2px rgba(0,0,0,1);">Colosenses 3:14</span>
+                    </p>
+                    <div class="mt-8"> <!-- Ajuste del margen para los nombres -->
+                        <h2 class="font-amoresa text-[5rem] md:text-[6rem] text-white leading-none text-shimmer drop-shadow-lg" style="text-shadow: 3px 3px 10px rgba(0,0,0,0.8);">Alexis</h2>
+                        <p class="font-classic text-2xl text-[#D4AF37] my-[-10px] relative z-10 pulse-glow inline-block rounded-full px-2" style="text-shadow: 2px 2px 5px rgba(0,0,0,0.8);">&</p>
+                        <h2 class="font-amoresa text-[5rem] md:text-[6rem] text-white leading-none text-shimmer drop-shadow-lg" style="text-shadow: 3px 3px 10px rgba(0,0,0,0.8);">Cristhell</h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contador (Color: Verde Rifle) -->
+        <section class="bg-card card-green shape-arch fade-in text-center -mt-10">
+            <h2 class="section-title text-shimmer">Faltan</h2>
+            <div class="flex justify-center gap-3 md:gap-6 mt-4">
+                <div class="text-center">
+                    <span id="days" class="font-classic text-3xl md:text-4xl text-white block">00</span>
+                    <span class="text-[0.6rem] md:text-xs text-gray-300 uppercase tracking-widest">Días</span>
+                </div>
+                <div class="text-center">
+                    <span id="hours" class="font-classic text-3xl md:text-4xl text-white block">00</span>
+                    <span class="text-[0.6rem] md:text-xs text-gray-300 uppercase tracking-widest">Hrs</span>
+                </div>
+                <div class="text-center">
+                    <span id="minutes" class="font-classic text-3xl md:text-4xl text-white block">00</span>
+                    <span class="text-[0.6rem] md:text-xs text-gray-300 uppercase tracking-widest">Min</span>
+                </div>
+                <div class="text-center">
+                    <span id="seconds" class="font-classic text-3xl md:text-4xl text-white block">00</span>
+                    <span class="text-[0.6rem] md:text-xs text-gray-300 uppercase tracking-widest">Seg</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ceremonia Religiosa (Color: Marrón) -->
+        <section class="bg-card card-brown fade-in text-center">
+            <h2 class="section-title text-shimmer">Ceremonia Religiosa</h2>
+            <div class="mb-6 float-subtle">
+                <!-- SVG Salón del Reino en Dorado -->
+                <svg width="70" height="70" viewBox="0 0 64 64" fill="none" stroke="#D4AF37" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 opacity-100 drop-shadow-sm">
+                    <path d="M12 32 V54 H52 V32" stroke-width="1.5"/>
+                    <path d="M10 32 H54 V28 H10 V32 Z" stroke-width="1.5"/>
+                    <path d="M14 28 C14 16, 24 10, 32 10 C40 10, 50 16, 50 28" stroke-width="1.5"/>
+                    <path d="M18 28 C18 18, 26 14, 32 14 C38 14, 46 18, 46 28" stroke-width="1"/>
+                    <path d="M22 28 V18 M42 28 V18 M32 28 V14" stroke-width="1"/>
+                    <path d="M18 40 V48 M22 40 V48" stroke-width="1.5"/>
+                    <path d="M42 40 V48 M46 40 V48" stroke-width="1.5"/>
+                    <path d="M28 54 V40 H36 V54" stroke-width="1.5"/>
+                    <path d="M28 44 H36 M32 44 V54" stroke-width="1"/>
+                </svg>
+                <p class="font-classic text-xl text-white font-semibold">10:00 AM</p>
+                <p class="text-sm text-gray-200 mt-2">Salón del Reino de los Testigos de Jehová</p>
+                <p class="text-xs text-gray-400 mt-1">Loa, entre Capitán Echeverría y La Paz</p>
+            </div>
+            <a href="https://maps.app.goo.gl/7Ak1xsim8nTt6DpC9" target="_blank" class="btn-elegant btn-outline">Ver Ubicación</a>
+        </section>
+
+        <!-- Recepción (Color: Verde Rifle) -->
+        <section class="bg-card card-green fade-in text-center">
+            <h2 class="section-title text-shimmer">Recepción</h2>
+            <div class="mb-6 float-subtle">
+                <!-- SVG Arco Floral en Dorado -->
+                <svg width="70" height="70" viewBox="0 0 80 80" fill="none" stroke="#D4AF37" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 opacity-100 drop-shadow-sm">
+                    <path d="M25 65 V25 H55 V65" stroke-width="2"/>
+                    <path d="M22 25 H58 V20 H22 V25 Z" stroke-width="1.5"/>
+                    <path d="M55 25 C50 35, 40 40, 25 45" stroke-width="1"/>
+                    <path d="M52 25 C48 33, 38 38, 25 42" stroke-width="0.5"/>
+                    <path d="M55 25 C55 40, 60 55, 65 65" stroke-width="1"/>
+                    <path d="M25 40 C20 50, 15 60, 12 65" stroke-width="1"/>
+                    <circle cx="25" cy="25" r="4" fill="#D4AF37"/>
+                    <circle cx="55" cy="55" r="3" fill="#D4AF37"/>
+                    <circle cx="21" cy="22" r="2" fill="#D4AF37"/>
+                    <circle cx="58" cy="28" r="2" fill="#D4AF37"/>
+                </svg>
+                <p class="font-classic text-xl text-white font-semibold">19:00 HRS</p>
+                <p class="text-sm text-gray-200 mt-2">Salón Brakel</p>
+            </div>
+            <a href="https://maps.app.goo.gl/vK2wcLQPHSLbAvmK6" target="_blank" class="btn-elegant btn-outline">Ver Ubicación</a>
+        </section>
+
+        <!-- Itinerario (Color: Marrón) -->
+        <section class="bg-card card-brown shape-arch fade-in text-center">
+            <h2 class="section-title text-shimmer">Itinerario</h2>
+            <p class="text-sm text-gray-300 mb-8 max-w-md mx-auto leading-relaxed">
+                Los momentos especiales que compartiremos.<br><br>
+                <span class="font-amoresa text-3xl text-white block mb-2 text-shimmer drop-shadow-md">"No olvides ser puntual"</span>
+                <span class="italic text-gray-400 font-light text-[0.75rem]">porque todo empezará a la hora señalada, de esta manera no te perderás nada de nuestro maravilloso día.</span>
+            </p>
+            
+            <div class="timeline mt-8">
+                <!-- 19:00 -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M12 2c-4 0-8 4-8 8v12h16V10c0-4-4-8-8-8z"/><path d="M12 12h.01"/></svg>
+                    </div>
+                    <p class="font-classic text-lg text-white">19:00</p>
+                    <p class="text-xs text-gray-300">Recepción y bienvenida</p>
+                </div>
+                <!-- 20:00 -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>
+                    </div>
+                    <p class="font-classic text-lg text-white">20:00</p>
+                    <p class="text-xs text-gray-300">Entrada de los novios</p>
+                </div>
+                <!-- 20:30 -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    </div>
+                    <p class="font-classic text-lg text-white">20:30</p>
+                    <p class="text-xs text-gray-300">Primer baile de los novios</p>
+                </div>
+                <!-- 21:45 -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+                    </div>
+                    <p class="font-classic text-lg text-white">21:45</p>
+                    <p class="text-xs text-gray-300">Cena especial</p>
+                </div>
+                <!-- 22:30 -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p class="font-classic text-lg text-white">22:30</p>
+                    <p class="text-xs text-gray-300">¡Todos a la pista!</p>
+                </div>
+                <!-- 23:45 -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="14" rx="2" ry="2"/><path d="M12 5a3 3 0 1 0-3 3"/><path d="M12 5a3 3 0 1 1 3 3"/><path d="M12 8v14"/><path d="M3 15h18"/></svg>
+                    </div>
+                    <p class="font-classic text-lg text-white">23:45</p>
+                    <p class="text-xs text-gray-300">Presentación sorpresa</p>
+                </div>
+                <!-- 00:00 -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4-2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>
+                    </div>
+                    <p class="font-classic text-lg text-white">00:00</p>
+                    <p class="text-xs text-gray-300">Corte de la torta</p>
+                </div>
+                <!-- 00:30 -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </div>
+                    <p class="font-classic text-lg text-white">00:30</p>
+                    <p class="text-xs text-gray-300">Continuamos celebrando</p>
+                </div>
+                <!-- 02:30 -->
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+                    </div>
+                    <p class="font-classic text-lg text-white">02:30</p>
+                    <p class="text-xs text-gray-300">Despedida</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dress Code (Color: Verde Rifle) -->
+        <section class="bg-card card-green shape-arch-bottom fade-in text-center">
+            <h2 class="section-title text-shimmer">Dress Code</h2>
+            <p class="font-classic text-xl text-white tracking-widest mb-6">De Gala</p>
+            
+            <div class="flex justify-center gap-8 mb-6">
+                <!-- Traje Hombre -->
+                <div class="text-center float-subtle" style="animation-delay: 1s;">
+                    <svg width="45" height="100" viewBox="0 0 50 120" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-2 opacity-100">
+                        <path d="M15 10 L25 25 L35 10 Z"/>
+                        <path d="M10 15 C5 25, 5 45, 5 60 L15 60 L15 15 Z"/>
+                        <path d="M40 15 C45 25, 45 45, 45 60 L35 60 L35 15 Z"/>
+                        <path d="M15 15 L25 45 L35 15"/>
+                        <path d="M25 45 V70"/>
+                        <path d="M15 70 H35 L35 115 H25 L25 70"/>
+                        <path d="M15 70 V115 H25"/>
+                    </svg>
+                    <p class="text-[0.65rem] uppercase tracking-widest text-gray-200 font-semibold mb-1">Caballeros</p>
+                    <p class="text-[0.6rem] text-red-300 leading-tight">Evitar color café<br>y marrón</p>
+                </div>
+                
+                <!-- Vestido Mujer -->
+                <div class="text-center float-subtle">
+                    <svg width="55" height="100" viewBox="0 0 60 120" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-2 opacity-100">
+                        <path d="M20 10 L30 25 L40 10"/>
+                        <path d="M15 15 C20 30, 25 40, 20 50"/>
+                        <path d="M45 15 C40 30, 35 40, 40 50"/>
+                        <path d="M20 50 L10 115 H50 L40 50"/>
+                        <path d="M20 50 H40"/>
+                        <path d="M25 50 L20 115 M35 50 L40 115 M30 50 V115"/>
+                    </svg>
+                    <p class="text-[0.65rem] uppercase tracking-widest text-gray-200 font-semibold mb-1">Damas</p>
+                    <p class="text-[0.6rem] text-red-300 leading-tight max-w-[90px] mx-auto">Blanco, perla y beige<br>reservados para la novia</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mensaje Solo Adultos (Color: Marrón con Ícono) -->
+        <section class="bg-card card-brown fade-in text-center rounded-[40px] px-8 py-10 my-8">
+            <div class="mb-5 float-subtle">
+                <!-- SVG Ícono Elegante (Estrellas/Noche de Gala) -->
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto opacity-90 drop-shadow-sm">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    <path d="M5 4l1.5 3L8 7.5 6.5 9 5 8.5 3.5 10 2 8.5 3.5 7 5 4z" stroke-width="1" opacity="0.6"/>
+                    <path d="M19 4l1.5 3L22 7.5 20.5 9 19 8.5 17.5 10 16 8.5 17.5 7 19 4z" stroke-width="1" opacity="0.6"/>
+                </svg>
+            </div>
+            
+            <h3 class="font-classic text-xl text-[#D4AF37] mb-4 uppercase tracking-widest text-shimmer">Solo Adultos</h3>
+            <p class="text-sm text-gray-300 max-w-sm mx-auto leading-relaxed italic">
+                Amamos a sus pequeños, pero para que todos podamos disfrutar, relajarnos y celebrar al máximo, hemos decidido que nuestra boda sea una noche exclusiva para adultos. ¡Disfruten de su noche libre!
+            </p>
+        </section>
+
+        <!-- Asistencia (Color: Marrón) -->
+        <section class="bg-card card-green shape-arch fade-in text-center mb-12">
+            <h2 class="section-title text-shimmer">Asistencia</h2>
+            <p class="text-sm text-gray-200 mb-8 max-w-sm mx-auto leading-relaxed">
+                Para nosotros es muy importante compartir este día contigo. Por favor, confírmanos tu asistencia.
+            </p>
+            <a href="https://forms.gle/4xuUbT9AfKHbfoDm9" target="_blank" class="btn-elegant btn-solid px-8 py-3 text-sm pulse-glow">
+                <i class="fas fa-check-circle"></i> Confirmar Asistencia
+            </a>
+        </section>
+
+        <!-- Footer -->
+        <section class="text-center py-16 relative overflow-hidden">
+            <h2 class="font-amoresa text-[4rem] text-[#D4AF37] mb-2 text-shimmer" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.8);">¡Te esperamos!</h2>
+            <p class="font-classic text-xs tracking-widest text-gray-400 mt-4">ALEXIS & CRISTHELL</p>
+        </section>
+
+    </div>
+
+    <script>
+        const music = document.getElementById("bg-music");
+        const musicBtn = document.getElementById("music-btn");
+        const musicIcon = musicBtn.querySelector("i");
+        let isPlaying = false;
+
+        function createBurst() {
+            const container = document.getElementById('burst-container');
+            if(!container) return;
+            const particleCount = 45;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'burst-particle';
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 200; 
+                particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+                container.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function openInvitation(event) {
+            if(event) event.preventDefault();
+            createBurst(); 
+            const introScreen = document.getElementById("intro-screen");
+            introScreen.classList.add("open"); 
+            
+            setTimeout(() => {
+                introScreen.style.opacity = '0';
+                setTimeout(() => {
+                    introScreen.style.display = 'none';
+                    const mainContent = document.getElementById("main-content");
+                    mainContent.classList.add("visible");
+                    musicBtn.style.visibility = 'visible';
+                    musicBtn.style.opacity = '1';
+                    handleScrollAnimations(); 
+                }, 1000);
+            }, 800);
+
+            music.play().then(() => {
+                isPlaying = true;
+                musicIcon.classList.replace('fa-play', 'fa-pause');
+            }).catch(() => {
+                musicIcon.classList.replace('fa-pause', 'fa-play');
+            });
+        }
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicIcon.classList.replace('fa-pause', 'fa-play');
+            } else {
+                music.play();
+                musicIcon.classList.replace('fa-play', 'fa-pause');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // --- CONTADOR ---
+        const weddingDate = new Date("July 18, 2026 19:00:00").getTime();
+        setInterval(function() {
+            const distance = weddingDate - new Date().getTime();
+            if (distance < 0) return;
+            document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+        }, 1000);
+
+        // --- LUCES AMBIENTALES GLOBALES ---
+        function createAmbientLights() {
+            const container = document.getElementById('ambient-lights-container');
+            if(!container) return;
+            for (let i = 0; i < 40; i++) { /* Más luces para fondo oscuro */
+                let light = document.createElement('div');
+                light.className = 'ambient-light';
+                light.style.left = Math.random() * 100 + '%';
+                light.style.animationDelay = Math.random() * 15 + 's';
+                light.style.animationDuration = (8 + Math.random() * 15) + 's';
+                const size = 3 + Math.random() * 8;
+                light.style.width = size + 'px'; light.style.height = size + 'px';
+                container.appendChild(light);
+            }
+        }
+        createAmbientLights();
+
+        // --- ESTELA MÁGICA (CURSOR) ---
+        const cursorContainer = document.getElementById('magic-cursor-container');
+        let lastTrailTime = 0;
+        function addTrail(x, y) {
+            if (!cursorContainer) return;
+            const now = Date.now();
+            if (now - lastTrailTime < 40) return; 
+            lastTrailTime = now;
+            const trail = document.createElement('div');
+            trail.className = 'magic-trail';
+            trail.style.left = x + 'px'; trail.style.top = y + 'px';
+            const size = 4 + Math.random() * 8;
+            trail.style.width = size + 'px'; trail.style.height = size + 'px';
+            cursorContainer.appendChild(trail);
+            setTimeout(() => trail.remove(), 1000);
+        }
+        
+        window.addEventListener('mousemove', (e) => addTrail(e.clientX, e.clientY));
+        window.addEventListener('touchmove', (e) => {
+            if(e.touches.length > 0) addTrail(e.touches[0].clientX, e.touches[0].clientY);
+        });
+
+        // --- ANIMACIONES FADE-IN SCROLL ---
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                if (elementTop < window.innerHeight - 50) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+        window.addEventListener('scroll', handleScrollAnimations);
+    </script>
+</body>
+</html>
